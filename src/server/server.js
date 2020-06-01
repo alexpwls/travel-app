@@ -26,9 +26,38 @@ app.get('/', function (req, res) {
 })
 
 app.listen(8081, function () {
-    console.log('Example app listening on port 8081!')
+    console.log('App listening on port 8081!')
+})
+
+app.post('/get-trip', (req, res) => {
+    const requestBody = req.body;
+    let data = {};
+
+    data.location = requestBody.location;
+
+    const locationPromise = new Promise((resolve, reject) => {
+        geoname(data.location).then(function (response) {
+            resolve(response);
+        });
+    });
+
+    Promise.all([locationPromise]).then(function (results) {
+        console.log(results);
+    })
 })
 
 module.exports = app;
 
-console.log(pixabay_url);
+// Geonames api
+const geoname = async (location) => {
+    const requestURL = geonames_url + 'q=' + location + '&username=' + geonames_account;
+    const response = await fetch(requestURL);
+    let result = {};
+    try {
+        result = await response.json();
+
+    } catch (error) {
+        console.log('error:', error);
+    };
+    return result;
+}

@@ -1,7 +1,9 @@
-import { helloFunction } from './js/test'
+import { getTrip } from './js/getTrip'
 
 import './styles/main.scss'
 
+document.getElementById('getTripButton').addEventListener('click', getTrip);
+
 export {
-    helloFunction
+    getTrip
 }
