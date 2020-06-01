@@ -6,7 +6,7 @@ Demo link: []( "demo link")
 
 ## Description:
 
-Final project from the Udacity Front-end developer nanodegree. Develop a project a travel app.
+Final project from the Udacity Front-end developer nanodegree. Develop a travel app.
 
 ## How to install?
 
