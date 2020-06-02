@@ -12,9 +12,9 @@ function getTrip() {
             },
             body: JSON.stringify({location}),
         })
-        .then(res => res.json())
-        .then(function(res) {
-            console.log(res);
+        .then(function(response) {
+            console.log('test');
+            console.log(response.json());
         })
     }
 }
