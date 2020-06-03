@@ -23,8 +23,9 @@ const pixabay_api_key = process.env.PIXABAY_API_KEY;
 const pixabay_url = process.env.PIXABAY_URL;
 
 let projectData = {};
- 
+
 app.get('/', function (req, res) {
+    console.log("teqsdfqdfst");
     res.sendFile('dist/index.html')
 })
 
@@ -41,13 +42,18 @@ app.post('/lat-lon', (req, res) => {
         geoname(data.location).then(function (response) {
             projectData['lat'] = response.geonames[0].lat;
             projectData['lon'] = response.geonames[0].lng;
-            resolve(response);
+            resolve("Succes!");
         });
     });
 
-    Promise.all([locationPromise]).then(function (results) {
-        console.log("Lat, Lon collected.");
+    locationPromise.then(( message ) => {
+        console.log(message);
+        res.send(projectData);
     })
+    .catch((err) => {
+        console.log(err);
+    });
+
 })
 
 module.exports = app;

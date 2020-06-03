@@ -13,7 +13,6 @@ function getTrip() {
             body: JSON.stringify({location}),
         })
         .then(function(response) {
-            console.log('test');
             console.log(response.json());
         })
     }
