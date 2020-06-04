@@ -36,13 +36,17 @@ app.listen(8081, function () {
 app.post('/lat-lon', (req, res) => {
     const requestBody = req.body;
     let data = {};
-    data.location = requestBody.location;
+    data.location = requestBody.data.location;
 
     const locationPromise = new Promise((resolve, reject) => {
         geoname(data.location).then(function (response) {
-            projectData['lat'] = response.geonames[0].lat;
-            projectData['lon'] = response.geonames[0].lng;
-            resolve("Succes!");
+            if(response.geonames[0] != undefined) {
+                projectData['lat'] = response.geonames[0].lat;
+                projectData['lon'] = response.geonames[0].lng;
+                resolve("Geoname API was succesfully called!");
+            } else {
+                reject("Something went wrong when calling Geoname API.")
+            }
         });
     });
 
@@ -67,6 +71,7 @@ const geoname = async (location) => {
         result = await response.json();
     } catch (error) {
         console.log('error:', error);
+        throw error
     };
     return result;
 }
