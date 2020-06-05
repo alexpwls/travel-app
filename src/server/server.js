@@ -25,7 +25,6 @@ const pixabay_url = process.env.PIXABAY_URL;
 let projectData = {};
 
 app.get('/', function (req, res) {
-    console.log("teqsdfqdfst");
     res.sendFile('dist/index.html')
 })
 
@@ -39,10 +38,19 @@ app.post('/lat-lon', (req, res) => {
     data.location = requestBody.data.location;
 
     const locationPromise = new Promise((resolve, reject) => {
-        geoname(data.location).then(function (response) {
+        geoname(data.location).then(function(response){
             if(response.geonames[0] != undefined) {
-                projectData['lat'] = response.geonames[0].lat;
-                projectData['lon'] = response.geonames[0].lng;
+                let lat = response.geonames[0].lat;
+                let lon = response.geonames[0].lng;
+                weatherbitCurrent(lat,lon).then(function(responseWeatherbitCurrent){
+                    console.log(responseWeatherbitCurrent);
+                })
+                weatherbitForecast(lat,lon).then(function(responseWeatherbitForecast){
+                    console.log(responseWeatherbitForecast);
+                })
+                pixabay(data.location).then(function(pixabayResponse){
+                    console.log(pixabayResponse);
+                })
                 resolve("Geoname API was succesfully called!");
             } else {
                 reject("Something went wrong when calling Geoname API.")
@@ -65,6 +73,48 @@ module.exports = app;
 // Geonames api
 const geoname = async (location) => {
     const requestURL = geonames_url + 'q=' + location + '&username=' + geonames_account + '&maxRows=1';
+    const response = await fetch(requestURL);
+    let result = {};
+    try {
+        result = await response.json();
+    } catch (error) {
+        console.log('error:', error);
+        throw error
+    };
+    return result;
+}
+
+// Weatherbit get current weather
+const weatherbitCurrent = async (lat, lon) => {
+    const requestURL = weatherbit_current_weather_url + "?key=" + weatherbit_api_key + "&lang=en" + "&units=M" + "&lat=" + lat + "&lon=" + lon;
+    const response = await fetch(requestURL);
+    let result = {};
+    try {
+        result = await response.json();
+    } catch (error) {
+        console.log('error:', error);
+        throw error
+    };
+    return result;
+}
+
+// Weatherbit get forecast weather
+const weatherbitForecast = async (lat, lon) => {
+    const requestURL = weatherbit_forecast_16d_url + "?key=" + weatherbit_api_key + "&lang=en" + "&units=M" + "&lat=" + lat + "&lon=" + lon;
+    const response = await fetch(requestURL);
+    let result = {};
+    try {
+        result = await response.json();
+    } catch (error) {
+        console.log('error:', error);
+        throw error
+    };
+    return result;
+}
+
+// Pixabay get image
+const pixabay = async (location) => {
+    const requestURL = pixabay_url + "?key=" + pixabay_api_key + "&q=" + location + "&image_type=photo" + "&category=places";
     const response = await fetch(requestURL);
     let result = {};
     try {
