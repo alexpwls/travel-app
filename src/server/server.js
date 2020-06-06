@@ -37,7 +37,7 @@ app.post('/get-travel-data', (req, res) => {
     data.departing_date = requestBody.data.departingDate;
     data.latitude = requestBody.data.latitude;
     data.longitude = requestBody.data.longitude;
-    data.countryName = requestBody.data.countryName;
+    data.country_name = requestBody.data.countryName;
 
     let weatherbitPromise = new Promise((resolve, reject) => {
         weatherbitCurrent(data.latitude,data.longitude).then(function(responseWeatherbitCurrent){
@@ -62,13 +62,13 @@ app.post('/get-travel-data', (req, res) => {
         const weatherbitForecastData = results[1];
         const pixabayData = results[2];
 
-        //console.log(weatherbitData);
-        //console.log(weatherbitForecastData);
-        //console.log(pixabayData);
+        data.weatherbit_data = weatherbitData;
+        data.weatherbit_forecast_data = weatherbitForecastData;
+        data.pixabay_data = pixabayData;
+
+        console.log(data);
     });
 })
-
-module.exports = app;
 
 // Weatherbit get current weather
 const weatherbitCurrent = async (lat, lon) => {
@@ -111,3 +111,5 @@ const pixabay = async (location) => {
     };
     return result;
 }
+
+module.exports = app;
