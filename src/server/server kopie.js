@@ -12,6 +12,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(express.static('dist'));
 
+const geonames_account = process.env.GEONAMES_ACCOUNT;
+const geonames_url = process.env.GEONAMES_URL;
+
 const weatherbit_api_key = process.env.WEATHERBIT_API_KEY;
 const weatherbit_current_weather_url = process.env.WEATHERBIT_CURRENT_WEATHER_URL;
 const weatherbit_forecast_16d_url = process.env.WEATHERBIT_FORECAST_16D_URL;
@@ -30,45 +33,65 @@ app.listen(8081, function () {
 })
 let data = {};
 
-app.post('/get-travel-data', (req, res) => {
+app.post('/lat-lon', (req, res) => {
     let requestBody = req.body;
     data = {};
     data.location = requestBody.data.location;
     data.departing_date = requestBody.data.departingDate;
-    data.latitude = requestBody.data.latitude;
-    data.longitude = requestBody.data.longitude;
-    data.countryName = requestBody.data.countryName;
 
-    let weatherbitPromise = new Promise((resolve, reject) => {
-        weatherbitCurrent(data.latitude,data.longitude).then(function(responseWeatherbitCurrent){
-            resolve(responseWeatherbitCurrent);
+    let locationPromise = new Promise((resolve, reject) => {
+        geoname(data.location).then(function(response){
+            if(response.geonames[0] != undefined) {
+                data.country = response.geonames[0].countryName;
+                data.lat = response.geonames[0].lat;
+                data.lon = response.geonames[0].lng;
+            } else {
+                reject("Something went wrong.")
+            }
         });
-    });
-
-    let weatherbitForecastPromise = new Promise((resolve, reject) => {
-        weatherbitForecast(data.latitude,data.longitude).then(function(responseWeatherbitForecast){
-            resolve(responseWeatherbitForecast);
+        weatherbitCurrent(data.lat,data.lon).then(function(responseWeatherbitCurrent){
+            data.timezone = responseWeatherbitCurrent.data[0].timezone;
+            data.temp = responseWeatherbitCurrent.data[0].temp;
+            data.weather_icon = responseWeatherbitCurrent.data[0].weather.icon;
+            data.weather_code = responseWeatherbitCurrent.data[0].weather.code;
+            data.weather_description = responseWeatherbitCurrent.data[0].weather.description;
         });
-    });
-
-    let pixabayPromise = new Promise((resolve, reject) => {
+        weatherbitForecast(data.lat,data.lon).then(function(responseWeatherbitForecast){
+            data.forcecast = responseWeatherbitForecast;
+        });
         pixabay(data.location).then(function(pixabayResponse){
-            resolve(pixabayResponse);
+            data.page_url = pixabayResponse.hits[0].pageURL;
         });
+        
+        resolve("API's were succesfully called!");
     });
 
-    Promise.all([weatherbitPromise, weatherbitForecastPromise, pixabayPromise]).then(function (results) {
-        const weatherbitData = results[0];
-        const weatherbitForecastData = results[1];
-        const pixabayData = results[2];
-
-        //console.log(weatherbitData);
-        //console.log(weatherbitForecastData);
-        //console.log(pixabayData);
+    locationPromise.then(( message ) => {
+        console.log(message);
+        console.log(data);
+        res.send(data);
+    })
+    .catch((err) => {
+        console.log(err);
     });
+
 })
 
 module.exports = app;
+
+// Geonames api
+const geoname = async (location) => {
+    const requestURL = geonames_url + 'q=' + location + '&username=' + geonames_account + '&maxRows=1';
+    const response = await fetch(requestURL);
+    let result = {};
+    try {
+        result = await response.json();
+    } catch (error) {
+        console.log('error:', error);
+        throw error
+    };
+    return result;
+}
 
 // Weatherbit get current weather
 const weatherbitCurrent = async (lat, lon) => {
