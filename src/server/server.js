@@ -40,16 +40,31 @@ app.post('/lat-lon', (req, res) => {
     const locationPromise = new Promise((resolve, reject) => {
         geoname(data.location).then(function(response){
             if(response.geonames[0] != undefined) {
-                let lat = response.geonames[0].lat;
-                let lon = response.geonames[0].lng;
-                weatherbitCurrent(lat,lon).then(function(responseWeatherbitCurrent){
-                    console.log(responseWeatherbitCurrent);
+                data.country = response.geonames[0].countryName;
+                data.lat = response.geonames[0].lat;
+                data.lon = response.geonames[0].lng;
+                weatherbitCurrent(data.lat,data.lon).then(function(responseWeatherbitCurrent){
+                    data.timezone = responseWeatherbitCurrent.data[0].timezone;
+                    data.temp = responseWeatherbitCurrent.data[0].temp;
+                    data.weather_icon = responseWeatherbitCurrent.data[0].weather.icon;
+                    data.weather_code = responseWeatherbitCurrent.data[0].weather.code;
+                    data.weather_description = responseWeatherbitCurrent.data[0].weather.description;
                 })
-                weatherbitForecast(lat,lon).then(function(responseWeatherbitForecast){
-                    console.log(responseWeatherbitForecast);
+                weatherbitForecast(data.lat,data.lon).then(function(responseWeatherbitForecast){
+                    //console.log(responseWeatherbitForecast);
+                    let forecastData = [{}]
+                    for (i in responseWeatherbitForecast.data) {
+                        let day = {}
+                        day.temp = responseWeatherbitForecast.data[i].temp;
+                        day.datetime = responseWeatherbitForecast.data[i].datetime;
+                        forecastData += day;
+                    }
+                    console.log(forecastData)
                 })
                 pixabay(data.location).then(function(pixabayResponse){
-                    console.log(pixabayResponse);
+                    // console.log(pixabayResponse)
+                    // console.log(pixabayResponse.hits[0].webformatURL.toString());
+                    // data.page_url = pixabayResponse.hits[0].pageURL;
                 })
                 resolve("Geoname API was succesfully called!");
             } else {
@@ -60,7 +75,8 @@ app.post('/lat-lon', (req, res) => {
 
     locationPromise.then(( message ) => {
         console.log(message);
-        res.send(projectData);
+        console.log(data);
+        res.send(data);
     })
     .catch((err) => {
         console.log(err);
@@ -100,7 +116,7 @@ const weatherbitCurrent = async (lat, lon) => {
 
 // Weatherbit get forecast weather
 const weatherbitForecast = async (lat, lon) => {
-    const requestURL = weatherbit_forecast_16d_url + "?key=" + weatherbit_api_key + "&lang=en" + "&units=M" + "&lat=" + lat + "&lon=" + lon;
+    const requestURL = weatherbit_forecast_16d_url + "?key=" + weatherbit_api_key + "&lang=en" + "&units=M" + "&lat=" + lat + "&lon=" + lon + "&days=7";
     const response = await fetch(requestURL);
     let result = {};
     try {
@@ -114,7 +130,7 @@ const weatherbitForecast = async (lat, lon) => {
 
 // Pixabay get image
 const pixabay = async (location) => {
-    const requestURL = pixabay_url + "?key=" + pixabay_api_key + "&q=" + location + "&image_type=photo" + "&category=places";
+    const requestURL = pixabay_url + "?key=" + pixabay_api_key + "&q=" + location + "&image_type=photo" + "&category=travel" + "&per_page=3";
     const response = await fetch(requestURL);
     let result = {};
     try {
