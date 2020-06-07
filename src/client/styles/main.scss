@@ -123,5 +123,14 @@ footer {
 
         }
     }
+}
 
+.error {
+    display: none;
+}
+
+.error-text {
+	color: red;
+	border: 1px solid red;
+	padding: 10px;
 }

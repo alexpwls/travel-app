@@ -2,6 +2,7 @@ function getTrip() {
     let location = document.getElementById('location').value;
     let departingDate = document.getElementById('departing-date').value;
     const url = 'http://localhost:8081/get-travel-data';
+    const errorSection = document.querySelector('.error-text');
 
     const postData = async (url = '', data = {}) => {
         const response = await fetch(url, {
@@ -21,16 +22,28 @@ function getTrip() {
         }
     }
 
-    Client.geonameAPI(location)
-    .then((data) => {
-        postData(url, {
-            location: data.geonames[0].name,
-            departing_date: departingDate,
-            latitude: data.geonames[0].lat,
-            longitude: data.geonames[0].lng,
-            countryName: data.geonames[0].countryName
-        });
-    })
+    if (location && departingDate) {
+        Client.geonameAPI(location)
+        .then((data) => {
+            postData(url, {
+                location: data.geonames[0].name,
+                departing_date: departingDate,
+                latitude: data.geonames[0].lat,
+                longitude: data.geonames[0].lng,
+                countryName: data.geonames[0].countryName
+            });
+        })
+    } else if (location) {
+        document.querySelector('.error').style.display = "block";
+        errorSection.innerHTML = "Please enter a date";
+    } else if (departingDate) {
+        document.querySelector('.error').style.display = "block";
+        errorSection.innerHTML = "Please enter a location";
+    } else {
+        document.querySelector('.error').style.display = "block";
+        errorSection.innerHTML = "Please fill in all the fields❗";
+    }
+
 
     function forecastHTML(forecastData) {
         return `<div class="weather-box">
@@ -58,9 +71,15 @@ function getTrip() {
         document.getElementById('current-description').innerHTML = weather_description;
         let item = {}
         forecastSection.innerHTML = '';
-        for(item in TravelData.weatherbit_forecast_data.data) {
-            forecastSection.insertAdjacentHTML('beforeend', forecastHTML(TravelData.weatherbit_forecast_data.data[item]));
+
+        if (TravelData.weatherbit_forecast_data != null) {
+            for(item in TravelData.weatherbit_forecast_data.data) {
+                forecastSection.insertAdjacentHTML('beforeend', forecastHTML(TravelData.weatherbit_forecast_data.data[item]));
+            }
+        } else {
+            document.querySelector('.weather-forecast-content').style.display = "none";
         }
+
         document.getElementById('destination-image').src = TravelData.pixabay_data.hits[0].webformatURL;
         document.querySelector('.travel-result').style.display = "block";
     }

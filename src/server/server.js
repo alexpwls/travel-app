@@ -15,6 +15,7 @@ app.use(express.static('dist'));
 const weatherbit_api_key = process.env.WEATHERBIT_API_KEY;
 const weatherbit_current_weather_url = process.env.WEATHERBIT_CURRENT_WEATHER_URL;
 const weatherbit_forecast_16d_url = process.env.WEATHERBIT_FORECAST_16D_URL;
+const weatherbit_history_url = process.env.WEATHERBIT_HISTORY_URL;
 
 const pixabay_api_key = process.env.PIXABAY_API_KEY;
 const pixabay_url = process.env.PIXABAY_URL;
@@ -40,13 +41,13 @@ app.post('/get-travel-data', (req, res) => {
     data.country_name = requestBody.data.countryName;
     data.google_maps = "https://maps.google.com/?q=" + data.latitude + "," + data.longitude + "&z=3&output=embed"
     
-    let date = new Date(data.departing_date);
-    let providedDate = date.getTime();
+    let provided_d = new Date(data.departing_date);
+    let providedDate = provided_d.getTime();
 
-    let d = new Date();
-    let currentDate = d.getTime();
+    let current_d = new Date();
+    let currentDate = current_d.getTime();
 
-    let seven_days = 86400000 * 7;
+    let sixteen_days = 86400000 * 16;
 
     let weatherbitPromise = new Promise((resolve, reject) => {
         weatherbitCurrent(data.latitude,data.longitude).then(function(responseWeatherbitCurrent){
@@ -60,10 +61,10 @@ app.post('/get-travel-data', (req, res) => {
         });
     });
 
-    if (currentDate + seven_days < providedDate) {
-        console.log("Provided date is beyond 7 days")
+    if (currentDate + sixteen_days < providedDate) {
+        console.log("Provided date is beyond 16 days")
     } else {
-        console.log("Provided date is not beyond 7 days");
+        console.log("Provided date is not beyond 16 days");
     }
 
     let pixabayPromise = new Promise((resolve, reject) => {
@@ -78,7 +79,14 @@ app.post('/get-travel-data', (req, res) => {
         const pixabayData = results[2];
 
         data.weatherbit_data = weatherbitData;
-        data.weatherbit_forecast_data = weatherbitForecastData;
+        if (currentDate + sixteen_days < providedDate) {
+            console.log("Provided date is beyond 16 days")
+            data.weatherbit_forecast_data = null;
+        } else {
+            console.log("Provided date is not beyond 16 days");
+            data.weatherbit_forecast_data = weatherbitForecastData;
+        }
+        
         data.pixabay_data = pixabayData;
 
         res.send(data);
