@@ -22,10 +22,8 @@ const pixabay_api_key = process.env.PIXABAY_API_KEY;
 const pixabay_url = process.env.PIXABAY_URL;
 
 let projectData = {};
-console.log(path.resolve('dist/index.html'));
 app.get('/', function (req, res) {
-    console.log(path.resolve('dist/index.html'));
-    res.sendFile(path.resolve('./dist/index.html'));
+    res.sendFile(path.resolve('../../dist/index.html'));
 })
 
 app.listen(8081, function () {
