@@ -16,7 +16,6 @@ app.use(express.static(path.resolve('../../dist/')));
 const weatherbit_api_key = process.env.WEATHERBIT_API_KEY;
 const weatherbit_current_weather_url = process.env.WEATHERBIT_CURRENT_WEATHER_URL;
 const weatherbit_forecast_16d_url = process.env.WEATHERBIT_FORECAST_16D_URL;
-const weatherbit_history_url = process.env.WEATHERBIT_HISTORY_URL;
 
 const pixabay_api_key = process.env.PIXABAY_API_KEY;
 const pixabay_url = process.env.PIXABAY_URL;

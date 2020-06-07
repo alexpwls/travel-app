@@ -1,7 +1,7 @@
 # Travel app ![alt text][logo]
 [logo]: https://alexpwls.github.io/personal-blog-website/images/favicon/favicon-16x16.png "Purple dot"
 
-Demo link: []( "demo link")
+Demo link: [http://159.89.82.249/](http://159.89.82.249/ "demo link")
 ---
 
 ## Description:
