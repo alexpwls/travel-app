@@ -34,11 +34,19 @@ app.post('/get-travel-data', (req, res) => {
     let requestBody = req.body;
     data = {};
     data.location = requestBody.data.location;
-    data.departing_date = requestBody.data.departingDate;
+    data.departing_date = requestBody.data.departing_date;
     data.latitude = requestBody.data.latitude;
     data.longitude = requestBody.data.longitude;
     data.country_name = requestBody.data.countryName;
     data.google_maps = "https://maps.google.com/?q=" + data.latitude + "," + data.longitude + "&z=3&output=embed"
+    
+    let date = new Date(data.departing_date);
+    let providedDate = date.getTime();
+
+    let d = new Date();
+    let currentDate = d.getTime();
+
+    let seven_days = 86400000 * 7;
 
     let weatherbitPromise = new Promise((resolve, reject) => {
         weatherbitCurrent(data.latitude,data.longitude).then(function(responseWeatherbitCurrent){
@@ -51,6 +59,12 @@ app.post('/get-travel-data', (req, res) => {
             resolve(responseWeatherbitForecast);
         });
     });
+
+    if (currentDate + seven_days < providedDate) {
+        console.log("Provided date is beyond 7 days")
+    } else {
+        console.log("Provided date is not beyond 7 days");
+    }
 
     let pixabayPromise = new Promise((resolve, reject) => {
         pixabay(data.location).then(function(pixabayResponse){
