@@ -3,20 +3,57 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Travel app</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=PT+Serif&display=swap" rel="stylesheet" />
 </head>
 <body>
-    <label for="location">Where do you want to go?</label>
-    <input type="text" id="location" name="location" placeholder="Enter location">
-    <label for="departing-date">When do you plan to go?</label>
-    <input type="date" id="departing-date" name="departing-date">
-    <button id="getTripButton">Check trip</button>
+    <header>
+        <h1>
+            <a href="#">Travel app <img id="logo" class="logo" alt="logo" title="Purple dot" /></a>
+        </h1>
+    </header>
 
-    <img id="destination-image" src="">
-    <h1 id="country">Country</h1>
-    <a id="google-maps-link" href="#" target="_blank">Google Maps link</a>
-    <p id="current-temp">Current temp</p>
-    <img id="current-icon" src="">
-    <p id="current-description"></p>
-    <ul id="forecast-data"></ul>
+    <main>
+        <section class="travel-box">
+            <label for="location">Where do you want to go?</label>
+            <input type="text" id="location" name="location" placeholder="Enter location">
+            <label for="departing-date">When do you plan to go?</label>
+            <input type="date" id="departing-date" name="departing-date">
+            <button id="getTripButton">Check trip</button>
+        </section>
+
+        <section class="travel-result">
+            <h1 id="country"></h1>
+            <figure>
+                <img id="destination-image" src="">
+                <figcaption id="figcaption"></figcaption>
+            </figure>
+            
+            <h2>Location on the map</h2>
+            <iframe id="google-maps-link" src="" width="300" height="200"></iframe> 
+            
+            <h2>Current weather</h2>
+            <div class="weather-content">
+                <img id="current-icon" src="">
+                <div class="weather-box">
+                    <p id="current-temp"></p>
+                    <p id="current-description"></p>
+                </div>
+            </div>
+            <h2>7 day forecast</h2>
+            <div class="weather-forecast-content">
+            </div>
+
+            <ul id="forecast-data"></ul>
+        </section>
+    </main>
+
+    <footer>
+        <p>Travel app <img class="logo-footer" alt="Logo" title="Purple dot" /> &copy; 2020</p>
+    </footer>
+
+
+
+
 </body>
 </html>

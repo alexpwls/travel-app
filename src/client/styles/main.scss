@@ -1,5 +1,126 @@
 @import "design-system";
 
 body {
-    background: $lightgrey-color;
+    width: 300px;
+	display: grid;
+	grid-template-rows: 100px 1fr 100px;
+    grid-template-areas: "hd" "sc" "ft";
+    border: 2px solid $lightgrey-color;
+	margin: 0 auto;
+	padding: 0 10px;
+}
+
+header {
+	text-align: center;
+    grid-area: hd;
+
+    h1 {
+        margin: 0;
+    }
+}
+
+section {
+	grid-area: sc;
+}
+
+footer {
+	grid-area: ft;
+}
+
+.travel-box {
+    width: 280px;
+    background: $main-color;
+    padding: 10px;
+
+    label {
+        color: #fff;
+    }
+
+    input {
+        background: none;
+        color: #fff;
+    }
+
+    ::placeholder {
+        font-size: 16px;
+        color: #fff;
+    }
+
+    button {
+        border: 1px solid $main-color;
+        background-color: #fff;
+        color: $main-color;
+    }
+
+    button:hover {
+        border: 1px solid $lightgrey-color;
+    }
+}
+
+.travel-result {
+    display: none;
+
+    #destination-image {
+        width: 300px;
+    }
+
+    iframe {
+        border: none;
+    }
+
+    figure {
+        margin-left: 0px;
+    }
+
+    figcaption {
+        margin-top: -2em;
+        margin-left: 10px;
+        color: #fff;
+        text-shadow: 2px 2px $main-color;
+    }
+
+    .weather-content {
+        width: 298px;
+        display: flex;
+        flex-direction: row;
+        border: 1px solid $lightgrey-color;
+
+        img {
+            width: 100px;
+        }
+
+        .current-temp {
+            float: left;
+        }
+
+        .weather-box {
+            display: flex;
+            flex-direction: column;
+
+            p {
+                margin-bottom: 0;
+            }
+        }
+    }
+
+    .weather-forecast-content {
+        width: 298px;
+        display: flex;
+        flex-direction: row;
+        border: 1px solid $lightgrey-color;
+
+        .weather-box {
+            img {
+                width: 42px;
+                height: 42px;
+            }
+
+            p {
+                text-align: center;
+                font-size: 9px;
+            }
+
+        }
+    }
+
 }

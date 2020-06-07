@@ -38,7 +38,7 @@ app.post('/get-travel-data', (req, res) => {
     data.latitude = requestBody.data.latitude;
     data.longitude = requestBody.data.longitude;
     data.country_name = requestBody.data.countryName;
-    data.google_maps = "https://maps.google.com/?q=" + data.latitude + "," + data.longitude
+    data.google_maps = "https://maps.google.com/?q=" + data.latitude + "," + data.longitude + "&z=3&output=embed"
 
     let weatherbitPromise = new Promise((resolve, reject) => {
         weatherbitCurrent(data.latitude,data.longitude).then(function(responseWeatherbitCurrent){
