@@ -24,7 +24,7 @@ const pixabay_url = process.env.PIXABAY_URL;
 let projectData = {};
 
 app.get('/', function (req, res) {
-    res.sendFile('./dist/index.html')
+    res.sendFile(path.resolve('dist/index.html'));
 })
 
 app.listen(8081, function () {
