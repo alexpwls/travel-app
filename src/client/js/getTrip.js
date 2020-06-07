@@ -44,7 +44,6 @@ function getTrip() {
         errorSection.innerHTML = "Please fill in all the fields❗";
     }
 
-
     function forecastHTML(forecastData) {
         return `<div class="weather-box">
                 <img src="https://www.weatherbit.io/static/img/icons/${forecastData.weather.icon}.png">

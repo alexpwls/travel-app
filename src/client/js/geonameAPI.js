@@ -1,4 +1,4 @@
-export function geonameAPI(location) {
+function geonameAPI(location) {
     const url = 'http://api.geonames.org/searchJSON?q=' + location + '&username=alexpwls&maxRows=1';
     const getGeoData = async (url) => {
         const response = await fetch(url);
@@ -13,3 +13,5 @@ export function geonameAPI(location) {
 
     return getGeoData(url);
 }
+
+export { geonameAPI };
