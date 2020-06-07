@@ -11,7 +11,7 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use(express.static('dist'));
+app.use(express.static(path.resolve('../../dist/')));
 
 const weatherbit_api_key = process.env.WEATHERBIT_API_KEY;
 const weatherbit_current_weather_url = process.env.WEATHERBIT_CURRENT_WEATHER_URL;
