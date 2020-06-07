@@ -2,7 +2,8 @@
 
 body {
     width: 300px;
-	display: grid;
+    display: grid;
+    grid-template-columns: 300px;
 	grid-template-rows: 100px 1fr 100px;
     grid-template-areas: "hd" "sc" "ft";
     border: 2px solid $lightgrey-color;
