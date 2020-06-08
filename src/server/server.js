@@ -1,5 +1,4 @@
 const dotenv = require('dotenv');
-const path = require('path');
 const bodyParser = require('body-parser');
 const express = require('express');
 const fetch = require("node-fetch");
@@ -11,7 +10,7 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use(express.static(path.resolve('../../dist/')));
+app.use(express.static(('dist/')));
 
 const weatherbit_api_key = process.env.WEATHERBIT_API_KEY;
 const weatherbit_current_weather_url = process.env.WEATHERBIT_CURRENT_WEATHER_URL;
@@ -22,7 +21,7 @@ const pixabay_url = process.env.PIXABAY_URL;
 
 let projectData = {};
 app.get('/', function (req, res) {
-    res.sendFile(path.resolve('../../dist/index.html'));
+    res.sendFile('dist/index.html');
 })
 
 app.listen(8081, function () {
