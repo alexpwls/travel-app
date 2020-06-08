@@ -1,6 +1,10 @@
 function getTrip() {
+
+    // Get provided data
     let location = document.getElementById('location').value;
     let departingDate = document.getElementById('departing-date').value;
+
+    // Set URL for server side API
     const url = 'http://localhost:8081/get-travel-data';
     const errorSection = document.querySelector('.error-text');
 
@@ -22,8 +26,11 @@ function getTrip() {
         }
     }
 
+    // Check if data is provided
     if (location && departingDate) {
+        // Call Geoname API to get latitude and longitude
         Client.geonameAPI(location)
+        // When latitude and longitude is received send it to backend together with the provided data
         .then((data) => {
             postData(url, {
                 location: data.geonames[0].name,
@@ -44,6 +51,7 @@ function getTrip() {
         errorSection.innerHTML = "Please fill in all the fields❗";
     }
 
+    // Forecast HTML codeblock function for inserting content
     function forecastHTML(forecastData) {
         return `<div class="weather-box">
                 <img src="https://www.weatherbit.io/static/img/icons/${forecastData.weather.icon}.png">
@@ -57,6 +65,7 @@ function getTrip() {
 
     const forecastSection = document.querySelector('.weather-forecast-content');
 
+    // Update the UI with received data
     function updateUI(TravelData) {
         let temp = TravelData.weatherbit_data.data[0].temp
         let weather_icon = "https://www.weatherbit.io/static/img/icons/" + TravelData.weatherbit_data.data[0].weather.icon + ".png"
@@ -71,6 +80,7 @@ function getTrip() {
         let item = {}
         forecastSection.innerHTML = '';
 
+        // Forecast data can contain up to 7 items, loop through them and display them in the front-end
         if (TravelData.weatherbit_forecast_data != null) {
             for(item in TravelData.weatherbit_forecast_data.data) {
                 forecastSection.insertAdjacentHTML('beforeend', forecastHTML(TravelData.weatherbit_forecast_data.data[item]));
