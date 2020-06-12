@@ -1,4 +1,4 @@
-const dotenv = require('dotenv');git
+const dotenv = require('dotenv');
 const bodyParser = require('body-parser');
 const express = require('express');
 const fetch = require("node-fetch");
@@ -24,7 +24,7 @@ app.get('/', function (req, res) {
     res.sendFile('dist/index.html');
 })
 
-app.listen(8081, function () {
+app.listen(8084, function () {
     console.log('App listening on port 8081!')
 })
 let data = {};
